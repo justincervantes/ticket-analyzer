@@ -1,15 +1,17 @@
-version: "3.9"
-
 services:
   api:
     build: ./api
     container_name: api
     ports:
       - "8000:8000"
+    volumes:
+      - ./api/app:/app/app
     depends_on:
       - ollama
     environment:
-      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_URL=http://ollama:11434/api/generate
+    networks:
+      - ticket-analyzer-net
 
   ollama:
     image: ollama/ollama:latest
@@ -18,6 +20,11 @@ services:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    networks:
+      - ticket-analyzer-net
 
 volumes:
   ollama_data:
+
+networks:
+  ticket-analyzer-net:
